@@ -1,3 +1,5 @@
+https://github.com/fredcommo/IC50/blob/master/plot1.png
+
 # Demo
 require('devtools')
 require('rGithubClient')
