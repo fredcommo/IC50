@@ -1,6 +1,5 @@
 # Demo
 require('devtools')
-install_github('rGithubClient', 'brian-bot')
 require('rGithubClient')
 
 getFilesList <- function(git, tag = ''){
