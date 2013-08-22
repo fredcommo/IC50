@@ -1,6 +1,6 @@
 IC50.5P <- function(dose, Resp, T0 = NA, Ctrl = NA, LPweight = 0.25, fixB = NA, fixT = NA, fixS = NA,
 #                    Plot = TRUE, pcol = 'grey50', lcol = 'grey25', unit="nM", Title="",
-                    AddIC = .5, AddSd = TRUE, output = TRUE,...)
+                    showIC = .5, showSd = TRUE, output = TRUE,...)
   {
   
   object <- cellResp(dose = dose, Resp = Resp, LPweight = LPweight)

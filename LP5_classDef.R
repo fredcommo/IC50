@@ -65,7 +65,7 @@ setMethod("getLP4", "cellResp", function(object) return(object@LP4))
 setMethod("getLP5", "cellResp", function(object) return(object@LP5))
 setMethod("plot", signature = "cellResp",
           function(object, x=NA, y=NA, pcol = 'grey50', lcol = 'grey25', cex = 1.5,
-                   AddIC = .5, AddSd = TRUE, unit = 'µM', Title = NA, xlab = 'Log10(Drug[c])',...){
+                   showIC = .5, showSd = TRUE, unit = 'µM', Title = NA, xlab = 'Log10(Drug[c])',...){
             op <- par(no.readonly = TRUE)
             par(las = 1, cex.axis = 1.5, cex.lab = 1.75, mar = c(6.5, 5.5, 4, 2), mgp = c(3.5, 1, 0))
             dose <- .getDose(object)
@@ -80,15 +80,15 @@ setMethod("plot", signature = "cellResp",
             points(mx, my, pch = 1, cex = cex)
             legend('topright', legend = paste('Goodness of fit:', r2adj), bty = 'n', cex = 1.5)
             
-            if(!is.na(AddIC)){
+            if(!is.na(showIC)){
               sigma <- summary(getGoodness(object))$sigma
-              estim <- .estimateRange(AddIC, sigma, getParam(object), B = 1e4)
-              legend1 <- sprintf("IC%d : %.2f%s", AddIC*100, estim[2], unit)
+              estim <- .estimateRange(showIC, sigma, getParam(object), B = 1e4)
+              legend1 <- sprintf("IC%d : %.2f%s", showIC*100, estim[2], unit)
               legend2 <- sprintf("[%.2f, %.2f]", estim[1], estim[3])
               legend('bottomleft', legend = c(legend1, legend2), cex = 1.5, text.col = 'steelblue4', bty = 'n')
             }
             
-            if(AddSd){
+            if(showSd){
               bounds <- .IClm(getGoodness(object), getYcurve(object))
               xx <- c(newx, rev(newx))
               yy <- c(bounds$lo, rev(bounds$hi))

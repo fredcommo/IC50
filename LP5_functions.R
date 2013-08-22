@@ -128,18 +128,18 @@ require(stats)
   return(as.numeric(c(Dmin, D, Dmax)))
 }
 
-PlotResp <- function(dose, resp, estimates, newX, newY, pcol, lcol, Title, unit, AddIC, AddSd,...){
+PlotResp <- function(dose, resp, estimates, newX, newY, pcol, lcol, Title, unit, showIC, showSd,...){
   my <- sapply(unique(dose), function(d) {mean(resp[dose == d], na.rm = TRUE)})
   mx <- unique(dose)
   plot(my ~ mx, col = pcol, ylim = range(0, 1.1), ylab = 'Survival',...)
   
-  if(!is.na(AddIC)){
-    legend1 <- sprintf("IC%d : %.2f%s", AddIC*100, estimates$D[estimates$Surv == AddIC], unit)
-    legend2 <- sprintf("[%.2f, %.2f]", estimates$Dmin[estimates$Surv == AddIC], estimates$Dmax[estimates$Surv == AddIC])
+  if(!is.na(showIC)){
+    legend1 <- sprintf("IC%d : %.2f%s", showIC*100, estimates$D[estimates$Surv == showIC], unit)
+    legend2 <- sprintf("[%.2f, %.2f]", estimates$Dmin[estimates$Surv == showIC], estimates$Dmax[estimates$Surv == showIC])
     legend('bottomleft', legend = c(legend1, legend2), cex = 1.5, text.col = 'steelblue4', bty = 'n')
   }
   
-  if(AddSd){
+  if(showSd){
     Sd <- sapply(unique(dose), function(d) {sd(resp[dose == d], na.rm = TRUE)})
     pas <- (max(mx)-min(mx))/(length(mx)-1)/5
     lapply(1:length(Sd), function(i){
