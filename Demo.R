@@ -8,7 +8,7 @@ getFilesList <- function(git, tag = ''){
 }
 
 git <- getRepo('fredcommo/IC50')
-Rlist <- getFilesList(git, '.R')
+Rlist <- getFilesList(git, '[^Demo].R')
 sourceRepoFile(git, Rlist)
 
 op <- par(no.readonly = TRUE)
