@@ -2,6 +2,14 @@ IC50.5P <- function(dose, Resp, T0 = NA, Ctrl = NA, LPweight = 0.25, fixB = NA, 
 #                    Plot = TRUE, pcol = 'grey50', lcol = 'grey25', unit="nM", Title="",
                     showIC = .5, showSd = TRUE, output = TRUE,...)
   {
+  if(any(is.na(dose))){
+    Resp <- Resp[!is.na(dose)]
+    dose <- dose[!is.na(dose)]
+  }
+  if(any(is.na(Resp))){
+    dose <- dose[!is.na(Resp)]
+    Resp <- Resp[!is.na(Resp)]
+  }
   
   object <- cellResp(dose = dose, Resp = Resp, LPweight = LPweight)
   object@survProp <- .survProp(Resp, T0, Ctrl)
