@@ -1,5 +1,5 @@
 IC50.5P <- function(dose, Resp, T0 = NA, Ctrl = NA, LPweight = 0.25, fixB = NA, fixT = NA, fixS = NA,
-#                    Plot = TRUE, pcol = 'grey50', lcol = 'grey25', unit="nM", Title="",
+                    method = c("Both", "4PL", "5PL"),
                     showIC = .5, showSd = TRUE, output = TRUE,...)
   {
   if(any(is.na(dose))){
@@ -15,22 +15,30 @@ IC50.5P <- function(dose, Resp, T0 = NA, Ctrl = NA, LPweight = 0.25, fixB = NA, 
   object@survProp <- .survProp(Resp, T0, Ctrl)
 	# Optimisation step using nlm()
       init <- .initPar(.getDose(object), getSurvProp(object))
-      model4 <- nlm(f = .sce.5P, p = init,
+      method <- match.arg(method)
+      if(method %in% c("Both", "4PL")){
+        bestModel <- model4 <- nlm(f = .sce.5P, p = init,
                     x = .getDose(object), yobs = getSurvProp(object),
                     Weights = rep(1, length(resp)), LPweight = LPweight,
                     fixB = fixB, fixT = fixT, fixS = 1)
-      model4$estimate
-      model5 <- nlm(f = .sce.5P, p = init,
+        bestModel$goodness <- .fit(model4, .getDose(object), getSurvProp(object))
+      }
+
+      if(method %in% c("Both", "5PL")){
+        model5 <- nlm(f = .sce.5P, p = init,
                     x = .getDose(object), yobs = getSurvProp(object),
                     Weights = rep(1, length(resp)), LPweight = LPweight,
                     fixB = fixB, fixT = fixT, fixS = fixS)
-      model5$estimate
+        bestModel$goodness <- .fit(model5, .getDose(object), getSurvProp(object))
+        }
   
 	# Get best model
+    if(method == "Both"){
       bestModel <- .getBestModel(object, model4, model5)
-      Param <- bestModel$param
       object@goodness <- bestModel$goodness
-      object@model <- bestModel$model
+      }
+    object@model <- bestModel$model
+    Param <- bestModel$param
   
 	# Estimate critical points
 		  object@xCurve <- seq(min(dose, na.rm = TRUE)*1.1, max(dose, na.rm = TRUE)*1.1, length = 100)
@@ -48,11 +56,5 @@ IC50.5P <- function(dose, Resp, T0 = NA, Ctrl = NA, LPweight = 0.25, fixB = NA, 
         colnames(estimates) <- c('Surv', 'Dmin', 'D', 'Dmax')
         object@estimates <- estimates
 
-# 	# Graphics
-#     if(Plot){
-#       par(las = 1, cex.axis = 1.5, cex.lab = 1.75, mar = c(6.5, 5.5, 4, 2), mgp = c(3.5, 1, 0))
-#       plot(object, pch = 19)
-#       par(op)
-#     }
   return(object)
 }

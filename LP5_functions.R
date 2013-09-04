@@ -70,18 +70,31 @@ require(stats)
   return(cbind.data.frame(bottom = bottom, top = top, xmid = xmid, scal = scal, s = s))
 }
 
-.getBestModel <- function(object, model4, model5){
-  Param4 <- .getPar(model4)
-  Param5 <- .getPar(model5)
+.fit <- function(model, dose, obs){
+  Par <- .getPar(model)
+  yfit <- .LP5(Par$bottom, Par$top, Par$xmid, Par$scal, Par$s, dose)
+  lmLP <- lm(yfit ~ yobs)  #, weights = weights)
+  return(lmLP)
+}
   
-  # Goodness of fit
-  yfit4 <- .LP5(Param4$bottom, Param4$top, Param4$xmid, Param4$scal, Param4$s, dose)
+.getBestModel <- function(object, model4, model5){
   yobs <- getSurvProp(object)
-  lmLP4 <- lm(yfit4 ~ yobs)  #, weights = weights)
-  r4 <- summary(lmLP4)$adj.r.squared
-  yfit5 <- .LP5(Param5$bottom, Param5$top, Param5$xmid, Param5$scal, Param5$s, dose)
-  lmLP5 <- lm(yfit5 ~ yobs)	#, weights = weights)
-  r5 <- summary(lmLP5)$adj.r.squared
+
+  # Goodness of fit
+#   Param4 <- .getPar(model4)
+#   yfit4 <- .LP5(Param4$bottom, Param4$top, Param4$xmid, Param4$scal, Param4$s, dose)
+#   lmLP4 <- lm(yfit4 ~ yobs)  #, weights = weights)
+#   r4 <- summary(lmLP4)$adj.r.squared
+# 
+#   Param5 <- .getPar(model5)
+#   yfit5 <- .LP5(Param5$bottom, Param5$top, Param5$xmid, Param5$scal, Param5$s, dose)
+#   lmLP5 <- lm(yfit5 ~ yobs)	#, weights = weights)
+#   r5 <- summary(lmLP5)$adj.r.squared
+  fit4 <- .fit(model4, .getDose(object), yobs)
+  r4 <- summary(fit4)$adj.r.squared
+  fit5 <- .fit(model5, .getDose(object), yobs)
+  r5 <- summary(fit5)$adj.r.squared
+  
   if(r4 > r5){
     cat('The 4-parameters model looks good!\n')
     return(list(model = model4, param = Param4, goodness = lmLP4))
@@ -108,7 +121,10 @@ require(stats)
 }
   
 .invModel <- function(Param, Y){
-  return(Param$xmid - 1/Param$scal*log10(((Param$top - Param$bottom)/(Y - Param$bottom))^(1/Param$s)-1))
+  if(max(Y)>Param$top | min(Y)<=Param$bottom)
+    return(NA)
+  else
+    return(Param$xmid - 1/Param$scal*log10(((Param$top - Param$bottom)/(Y - Param$bottom))^(1/Param$s)-1))
 }
 
 .estimateRange <- function(target, sigma, Param, B = 1e4){
