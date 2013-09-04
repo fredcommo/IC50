@@ -73,7 +73,7 @@ require(stats)
 .fit <- function(model, dose, obs){
   Par <- .getPar(model)
   yfit <- .LP5(Par$bottom, Par$top, Par$xmid, Par$scal, Par$s, dose)
-  lmLP <- lm(yfit ~ yobs)  #, weights = weights)
+  lmLP <- lm(yfit ~ obs)  #, weights = weights)
   return(lmLP)
 }
   
