@@ -80,7 +80,6 @@ require(stats)
 .getBestModel <- function(object, model4, model5){
   yobs <- getSurvProp(object)
 
-  Goodness of fit
   Param4 <- .getPar(model4)
   yfit4 <- .LP5(Param4$bottom, Param4$top, Param4$xmid, Param4$scal, Param4$s, dose)
   lmLP4 <- lm(yfit4 ~ yobs)  #, weights = weights)
