@@ -64,5 +64,10 @@ IC50 <- function(dose, Resp, T0 = NA, Ctrl = NA, LPweight = 0.25, fixB = NA, fix
         colnames(estimates) <- c('Surv', 'Dmin', 'D', 'Dmax')
         object@estimates <- estimates
 
+    # Compute Area
+        x <- getXcurve(object)
+        y <- getYcurve(object)
+        object@AUC <- data.frame(trapezoide = AUC(x, y), Simpson = Simpson(x, y))
+
   return(object)
 }

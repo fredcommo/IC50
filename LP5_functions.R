@@ -134,6 +134,30 @@ require(stats)
   return(as.numeric(c(Dmin, D, Dmax)))
 }
 
+AUC <- function(x, y){
+  auc <- lapply(2:length(x), function(i){
+    da <- x[i]-x[i-1]
+    db <- y[i]-y[i-1]
+    y[i]*da +1/2*db*da
+  })
+  return(do.call(sum, auc))
+}
+
+# Simpson method
+Simpson <- function(x, y){
+  dx <- mean(diff(x, lag = 1), na.rm = TRUE)
+  n <- length(y)
+  if(n%%2 != 0){
+    x <- x[-n]
+    y <- y[-n]
+    n <- length(x)
+  }
+  f1 <- y[1]
+  fn <- y[n]
+  fy <- y[2:(n-1)]*rep(c(4, 2), each = (n-2)/2)
+  return(dx/3*(f1 + sum(fy) + fn))
+}
+
 # PlotResp <- function(dose, resp, estimates, newX, newY, pcol, lcol, Title, unit, showIC, showSd,...){
 #   my <- sapply(unique(dose), function(d) {mean(resp[dose == d], na.rm = TRUE)})
 #   mx <- unique(dose)

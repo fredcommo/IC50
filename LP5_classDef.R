@@ -10,16 +10,17 @@ setClass('cellResp', representation(dose = 'vector',
                                     model = 'ANY',
                                     goodness = 'ANY',
                                     estimates = 'data.frame',
+                                    AUC = 'data.frame',
                                     LP4 = 'ANY',
                                     LP5 = 'ANY'))
 
 # # Constructor
 cellResp = function(dose = dose, Resp = Resp, survProp = NA, initPar = NA, LPweight = 0, yfit = NA,
                     xCurve = NA, yCurve = NA, model = NA, goodness = NA, estimates = data.frame(),
-                    LP4 = ggplot(), LP5 = ggplot()){
+                    AUC = data.frame(), LP4 = ggplot(), LP5 = ggplot()){
   new('cellResp', dose = dose, Resp = Resp, survProp = survProp, initPar = initPar, LPweight = LPweight,
       yfit = yfit, xCurve = xCurve, yCurve = yCurve, model = model, goodness = goodness, estimates = estimates,
-      LP4 = LP4, LP5 = LP5)
+      AUC = AUC, LP4 = LP4, LP5 = LP5)
 }
 
 # # setGenerics
@@ -34,6 +35,7 @@ setGeneric("getModel", function(object) standardGeneric("getModel"))
 setGeneric("getParam", function(object) standardGeneric("getParam"))
 setGeneric("getGoodness", function(object) standardGeneric("getGoodness"))
 setGeneric("getEstimates", function(object) standardGeneric("getEstimates"))
+setGeneric("getAUC", function(object) standardGeneric("getAUC"))
 setGeneric("getLP4", function(object) standardGeneric("getLP4"))
 setGeneric("getLP5", function(object) standardGeneric("getLP5"))
 
@@ -61,6 +63,7 @@ setMethod('getEstimates', 'cellResp', function(object){
   return(estim[order(estim$Surv, decreasing = TRUE),])
   })
 
+setMethod("getAUC", "cellResp", function(object) return(object@AUC))
 setMethod("getLP4", "cellResp", function(object) return(object@LP4))
 setMethod("getLP5", "cellResp", function(object) return(object@LP5))
 setMethod("plot", signature = "cellResp",
