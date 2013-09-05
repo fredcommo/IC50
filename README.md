@@ -28,7 +28,7 @@ op <- par(no.readonly = TRUE)
 ss <- function(i){set.seed(123345+i)}
 ```
 ```
-# From ODs
+# From optic densities
 x <- seq(log10(0.001), log10(10), len = 8)
 y <- lapply(1:3, function(i){
   ss(i)
@@ -37,10 +37,19 @@ y <- lapply(1:3, function(i){
 Resp <- do.call(c, y) + rnorm(3*8, .5, .1)
 dose <- rep(signif(10^x, 2), 3)
 dose <- log10(dose)
-test <- IC50.5P(dose, Resp, T0 = .5, Ctrl = max(Resp))
+test <- IC50(dose, Resp, T0 = .5, Ctrl = max(Resp))
 plot(test)
 getEstimates(test)
 ```
+
+```
+# On the previous example, use 'method' to specify a model (Both, 4P, 5P).
+  # if Both (default), 4P and 5P are compared, and the best one (goodness of fit) is returned.
+test <- IC50(dose, Resp, T0 = .5, Ctrl = max(Resp), method = "4P")
+plot(test)
+getEstimates(test)
+```
+
 ```
 # From props of control
 x <- seq(log10(0.001), log10(10), len = 8)
@@ -51,7 +60,7 @@ y <- lapply(1:3, function(i){
 Resp <- do.call(c, y)
 dose <- rep(signif(10^x, 2), 3)
 dose <- log10(dose)
-test <- IC50.5P(dose, Resp)
+test <- IC50(dose, Resp)
 plot(test)
 getEstimates(test)
 ```
