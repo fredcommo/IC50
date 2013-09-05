@@ -101,7 +101,7 @@ require(stats)
   }
   else{
     cat('The 5-parameters model looks good!\n')
-    return(list(model = model5, param = getPar(model5), goodness = fit5))
+    return(list(model = model5, param = .getPar(model5), goodness = fit5))
   }
 }
 
