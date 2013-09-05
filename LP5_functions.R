@@ -70,44 +70,44 @@ require(stats)
   return(cbind.data.frame(bottom = bottom, top = top, xmid = xmid, scal = scal, s = s))
 }
 
-.fit <- function(model, dose, obs){
+.fit <- function(model, dose, yobs){
   Par <- .getPar(model)
   yfit <- .LP5(Par$bottom, Par$top, Par$xmid, Par$scal, Par$s, dose)
-  lmLP <- lm(yfit ~ obs)  #, weights = weights)
+  lmLP <- lm(yfit ~ yobs)  #, weights = weights)
   return(lmLP)
 }
   
 .getBestModel <- function(object, model4, model5){
   yobs <- getSurvProp(object)
 
-  Param4 <- .getPar(model4)
-  yfit4 <- .LP5(Param4$bottom, Param4$top, Param4$xmid, Param4$scal, Param4$s, dose)
-  lmLP4 <- lm(yfit4 ~ yobs)  #, weights = weights)
-  r4 <- summary(lmLP4)$adj.r.squared
-
-  Param5 <- .getPar(model5)
-  yfit5 <- .LP5(Param5$bottom, Param5$top, Param5$xmid, Param5$scal, Param5$s, dose)
-  lmLP5 <- lm(yfit5 ~ yobs)	#, weights = weights)
-  r5 <- summary(lmLP5)$adj.r.squared
-#   fit4 <- .fit(model4, .getDose(object), yobs)
-#   r4 <- summary(fit4)$adj.r.squared
-#   fit5 <- .fit(model5, .getDose(object), yobs)
-#   r5 <- summary(fit5)$adj.r.squared
+#   Param4 <- .getPar(model4)
+#   yfit4 <- .LP5(Param4$bottom, Param4$top, Param4$xmid, Param4$scal, Param4$s, dose)
+#   lmLP4 <- lm(yfit4 ~ yobs)  #, weights = weights)
+#   r4 <- summary(lmLP4)$adj.r.squared
+# 
+#   Param5 <- .getPar(model5)
+#   yfit5 <- .LP5(Param5$bottom, Param5$top, Param5$xmid, Param5$scal, Param5$s, dose)
+#   lmLP5 <- lm(yfit5 ~ yobs)	#, weights = weights)
+#   r5 <- summary(lmLP5)$adj.r.squared
+  fit4 <- .fit(model4, .getDose(object), yobs)
+  r4 <- summary(fit4)$adj.r.squared
+  fit5 <- .fit(model5, .getDose(object), yobs)
+  r5 <- summary(fit5)$adj.r.squared
   
   if(r4 > r5){
     cat('The 4-parameters model looks good!\n')
-    return(list(model = model4, param = .getPar(model4), goodness = lmLP4))
+    return(list(model = model4, param = .getPar(model4), goodness = fit4))
   }
   else{
     cat('The 5-parameters model looks good!\n')
-    return(list(model = model5, param = .getPar(model5), goodness = lmLP5))
+    return(list(model = model5, param = .getPar(model5), goodness = fit5))
   }
 }
 
 .IClm <- function(lmModel, newy){
   res <- lmModel$residuals
   Sqres <- sum(res^2)
-  yobs <- lmModel$model$obs
+  yobs <- lmModel$model$yobs
   yfit <- lmModel$model$yfit
   n <- length(yobs)
   ybar <- mean(yobs, na.rm = TRUE)
