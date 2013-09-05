@@ -25,7 +25,7 @@ y <- lapply(1:3, function(i){
 Resp <- do.call(c, y) + rnorm(3*8, .5, .1)
 dose <- rep(signif(10^x, 2), 3)
 dose <- log10(dose)
-test <- IC50.5P(dose, Resp, T0 = .5, Ctrl = max(Resp))
+test <- IC50(dose, Resp, T0 = .5, Ctrl = max(Resp), method = "5P")
 plot(test)
 getEstimates(test)
 
@@ -38,6 +38,6 @@ y <- lapply(1:3, function(i){
 Resp <- do.call(c, y)
 dose <- rep(signif(10^x, 2), 3)
 dose <- log10(dose)
-test <- IC50.5P(dose, Resp)
+test <- IC50(dose, Resp)
 plot(test)
 getEstimates(test)

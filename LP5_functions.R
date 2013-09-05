@@ -27,7 +27,7 @@ require(stats)
 }
 
 # Weighted SCE Function (Sum of Squared errors)
-.sce.5P <- function(param, x, yobs, Weights, LPweight, fixB, fixT, fixS){
+.sce <- function(param, x, yobs, Weights, LPweight, fixB, fixT, fixS){
   bottom <- param[1]
   top <- param[2]
   xmid <- param[3]
@@ -43,7 +43,7 @@ require(stats)
 }
 
 # Get weights (not used)
-.sce.5P.diag <- function(yobs, ytheo, w) {
+.sce.diag <- function(yobs, ytheo, w) {
   sq.res <- (yobs - ytheo)^2
   weights <- 1/sq.res^w
   return(weights)
@@ -80,15 +80,6 @@ require(stats)
 .getBestModel <- function(object, model4, model5){
   yobs <- getSurvProp(object)
 
-#   Param4 <- .getPar(model4)
-#   yfit4 <- .LP5(Param4$bottom, Param4$top, Param4$xmid, Param4$scal, Param4$s, dose)
-#   lmLP4 <- lm(yfit4 ~ yobs)  #, weights = weights)
-#   r4 <- summary(lmLP4)$adj.r.squared
-# 
-#   Param5 <- .getPar(model5)
-#   yfit5 <- .LP5(Param5$bottom, Param5$top, Param5$xmid, Param5$scal, Param5$s, dose)
-#   lmLP5 <- lm(yfit5 ~ yobs)	#, weights = weights)
-#   r5 <- summary(lmLP5)$adj.r.squared
   fit4 <- .fit(model4, .getDose(object), yobs)
   r4 <- summary(fit4)$adj.r.squared
   fit5 <- .fit(model5, .getDose(object), yobs)
@@ -143,29 +134,29 @@ require(stats)
   return(as.numeric(c(Dmin, D, Dmax)))
 }
 
-PlotResp <- function(dose, resp, estimates, newX, newY, pcol, lcol, Title, unit, showIC, showSd,...){
-  my <- sapply(unique(dose), function(d) {mean(resp[dose == d], na.rm = TRUE)})
-  mx <- unique(dose)
-  plot(my ~ mx, col = pcol, ylim = range(0, 1.1), ylab = 'Survival',...)
-  
-  if(!is.na(showIC)){
-    legend1 <- sprintf("IC%d : %.2f%s", showIC*100, estimates$D[estimates$Surv == showIC], unit)
-    legend2 <- sprintf("[%.2f, %.2f]", estimates$Dmin[estimates$Surv == showIC], estimates$Dmax[estimates$Surv == showIC])
-    legend('bottomleft', legend = c(legend1, legend2), cex = 1.5, text.col = 'steelblue4', bty = 'n')
-  }
-  
-  if(showSd){
-    Sd <- sapply(unique(dose), function(d) {sd(resp[dose == d], na.rm = TRUE)})
-    pas <- (max(mx)-min(mx))/(length(mx)-1)/5
-    lapply(1:length(Sd), function(i){
-      segments(x0 = mx[i], x1 = mx[i], y0 = my[i]-Sd[i], y1 = my[i]+Sd[i], lty = 2, lwd = 2)
-      segments(x0 = mx[i]-pas, x1 = mx[i]+pas, y0 = my[i]-Sd[i], y1 = my[i]-Sd[i], lty = 2, lwd = 2)
-      segments(x0 = mx[i]-pas, x1 = mx[i]+pas, y0 = my[i]+Sd[i], y1 = my[i]+Sd[i], lty = 2, lwd = 2)      
-    })
-  }
-  
-  lines(newY ~ newX, col = lcol,...)
-  Sub = "Weighted 5P logistic regr. (DoseResp package, version v.0)"
-  #if(LPweight==0) Sub = "Non weighted 5P logistic regr. (DoseResp package, version v.0)"
-  title (main = Title, sub = Sub, cex.sub = .75)
-}
+# PlotResp <- function(dose, resp, estimates, newX, newY, pcol, lcol, Title, unit, showIC, showSd,...){
+#   my <- sapply(unique(dose), function(d) {mean(resp[dose == d], na.rm = TRUE)})
+#   mx <- unique(dose)
+#   plot(my ~ mx, col = pcol, ylim = range(0, 1.1), ylab = 'Survival',...)
+#   
+#   if(!is.na(showIC)){
+#     legend1 <- sprintf("IC%d : %.2f%s", showIC*100, estimates$D[estimates$Surv == showIC], unit)
+#     legend2 <- sprintf("[%.2f, %.2f]", estimates$Dmin[estimates$Surv == showIC], estimates$Dmax[estimates$Surv == showIC])
+#     legend('bottomleft', legend = c(legend1, legend2), cex = 1.5, text.col = 'steelblue4', bty = 'n')
+#   }
+#   
+#   if(showSd){
+#     Sd <- sapply(unique(dose), function(d) {sd(resp[dose == d], na.rm = TRUE)})
+#     pas <- (max(mx)-min(mx))/(length(mx)-1)/5
+#     lapply(1:length(Sd), function(i){
+#       segments(x0 = mx[i], x1 = mx[i], y0 = my[i]-Sd[i], y1 = my[i]+Sd[i], lty = 2, lwd = 2)
+#       segments(x0 = mx[i]-pas, x1 = mx[i]+pas, y0 = my[i]-Sd[i], y1 = my[i]-Sd[i], lty = 2, lwd = 2)
+#       segments(x0 = mx[i]-pas, x1 = mx[i]+pas, y0 = my[i]+Sd[i], y1 = my[i]+Sd[i], lty = 2, lwd = 2)      
+#     })
+#   }
+#   
+#   lines(newY ~ newX, col = lcol,...)
+#   Sub = "Weighted 5P logistic regr. (DoseResp package, version v.0)"
+#   #if(LPweight==0) Sub = "Non weighted 5P logistic regr. (DoseResp package, version v.0)"
+#   title (main = Title, sub = Sub, cex.sub = .75)
+# }
