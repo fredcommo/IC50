@@ -154,7 +154,7 @@ Simpson <- function(x, y){
   }
   f1 <- y[1]
   fn <- y[n]
-  fy <- y[2:(n-1)]*rep(c(4, 2), each = (n-2)/2)
+  fy <- y[2:(n-1)]*rep(c(4, 2), (n-2)/2)
   return(dx/3*(f1 + sum(fy) + fn))
 }
 
