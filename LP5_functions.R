@@ -97,11 +97,11 @@ require(stats)
   
   if(r4 > r5){
     cat('The 4-parameters model looks good!\n')
-    return(list(model = model4, param = Param4, goodness = lmLP4))
+    return(list(model = model4, param = getParam(model4), goodness = fit4))
   }
   else{
     cat('The 5-parameters model looks good!\n')
-    return(list(model = model5, param = Param5, goodness = lmLP5))
+    return(list(model = model5, param = getParam(model5), goodness = fit5))
   }
 }
 
