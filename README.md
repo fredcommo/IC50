@@ -2,7 +2,7 @@
 # IC50
 [Example]
 
-### Compute IC50 with 4-P/5-P logistic regressions, using ODs and drug concentrations.
+### Compute IC50 with 4-P/5-P logistic regressions, using optic densities (ODs) or proportion of control, and drug concentrations.
 
 ### Demo
 
@@ -28,7 +28,7 @@ op <- par(no.readonly = TRUE)
 ss <- function(i){set.seed(123345+i)}
 ```
 ```
-# From optic densities
+# From ODs
 x <- seq(log10(0.001), log10(10), len = 8)
 y <- lapply(1:3, function(i){
   ss(i)
