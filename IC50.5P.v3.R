@@ -15,28 +15,28 @@ IC50.5P <- function(dose, Resp, T0 = NA, Ctrl = NA, LPweight = 0.25, fixB = NA, 
   object@survProp <- .survProp(Resp, T0, Ctrl)
 	# Optimisation step using nlm()
       init <- .initPar(.getDose(object), getSurvProp(object))
-      method <- match.arg(method)
-      if(method %in% c("Both", "4PL")){
-        bestModel <- model4 <- nlm(f = .sce.5P, p = init,
+#       method <- match.arg(method)
+#       if(method %in% c("Both", "4PL")){
+        model4 <- nlm(f = .sce.5P, p = init,
                     x = .getDose(object), yobs = getSurvProp(object),
                     Weights = rep(1, length(resp)), LPweight = LPweight,
                     fixB = fixB, fixT = fixT, fixS = 1)
-        bestModel$goodness <- .fit(model4, .getDose(object), getSurvProp(object))
-      }
+#         bestModel$goodness <- .fit(model4, .getDose(object), getSurvProp(object))
+#       }
 
-      if(method %in% c("Both", "5PL")){
+#       if(method %in% c("Both", "5PL")){
         model5 <- nlm(f = .sce.5P, p = init,
                     x = .getDose(object), yobs = getSurvProp(object),
                     Weights = rep(1, length(resp)), LPweight = LPweight,
                     fixB = fixB, fixT = fixT, fixS = fixS)
-        bestModel$goodness <- .fit(model5, .getDose(object), getSurvProp(object))
-        }
+#         bestModel$goodness <- .fit(model5, .getDose(object), getSurvProp(object))
+#         }
   
 	# Get best model
-    if(method == "Both"){
+#     if(method == "Both"){
       bestModel <- .getBestModel(object, model4, model5)
       object@goodness <- bestModel$goodness
-      }
+#       }
     object@model <- bestModel$model
     Param <- bestModel$param
   
