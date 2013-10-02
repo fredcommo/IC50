@@ -9,11 +9,11 @@
 ```
 # If not installed yet
 install.packages("devtools")
-install_github("rGithubClient", "brian_bot")
 ```
 
 ```
 require("devtools")
+install_github("rGithubClient", "brian-bot")
 require("rGithubClient")
 
 getFilesList <- function(git, tag = ''){
