@@ -1,8 +1,8 @@
 [Example]: https://github.com/fredcommo/IC50/blob/master/plot1.png
 # IC50
-[Example]
+##[Example]
 
-### Compute IC50 with 4-P/5-P logistic regressions, using optic densities (ODs) or proportion of control, and drug concentrations.
+### Compute I50 with 4-P/5-P logistic regressions, using optic densities (ODs) or proportion of control, and drug concentrations. Area under the curve is also estimated using the trapezoide method and the Simpson method.
 
 ### Demo
 
