@@ -1,4 +1,4 @@
-IC50 <- function(dose, Resp, T0 = NA, Ctrl = NA, Props = FALSE, LPweight = 0.25, fixB = NA, fixT = NA, fixS = NA,
+IC50 <- function(dose, Resp, T0 = NA, Ctrl = NA, Prop = FALSE, LPweight = 0.25, fixB = NA, fixT = NA, fixS = NA,
                     method = c("Both", "4P", "5P"), showIC = .5, showSd = TRUE, output = TRUE,...)
   
   {
@@ -17,7 +17,7 @@ IC50 <- function(dose, Resp, T0 = NA, Ctrl = NA, Props = FALSE, LPweight = 0.25,
   }
   
   object <- cellResp(dose = dose, Resp = Resp, LPweight = LPweight)
-  if(Props) object@survProp <- Resp
+  if(Prop) object@survProp <- Resp
   else object@survProp <- .survProp(Resp, T0, Ctrl)
 	# Optimisation step using nlm()
       init <- .initPar(.getDose(object), getSurvProp(object))
