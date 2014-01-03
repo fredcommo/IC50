@@ -79,7 +79,7 @@ setMethod("plot", signature = "cellResp",
             my <- sapply(unique(dose), function(d) {props <- survProp[dose == d]; prod(props)^(1/length(props))})
             mx <- unique(dose)
             r2adj <- round(summary(getGoodness(object))$adj.r.squared, 3)
-            plot(mx, my, col = pcol, cex = cex, ylim = range(0, max(my, 1.1)), xlab = xlab, ylab = 'Survival')#,...)
+            plot(mx, my, col = pcol, cex = cex, ylim = range(0, max(newy, 1))*1.2, xlab = xlab, ylab = 'Survival')#,...)
             points(mx, my, pch = 1, cex = cex)
             legend('topright', legend = paste('Goodness of fit:', r2adj), bty = 'n', cex = 1.5)
             
