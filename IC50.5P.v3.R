@@ -57,10 +57,10 @@ IC50 <- function(dose, Resp, T0 = NA, Ctrl = NA, LPweight = 0.25, fixB = NA, fix
 				Yflex = Param$bottom + (Param$top - Param$bottom)*(Param$s/(Param$s+1))^Param$s
 
 			# Compute simulations to estimate the IC50 conf. interval
-        P <- seq(.1, .9, by = .1)
+        targets <- seq(.1, .9, by = .1)
         sigma <- summary(getGoodness(object))$sigma
-        estimates <- lapply(P, function(p){.estimateRange(p, sigma, Param = Param, B = 1e4)})
-        estimates <- cbind.data.frame(Resp = P, do.call(rbind, estimates))
+        estimates <- lapply(targets, function(target){.estimateRange(target, sigma, Param = Param, B = 1e4)})
+        estimates <- cbind.data.frame(Resp = targets, do.call(rbind, estimates))
         colnames(estimates) <- c('Surv', 'Dmin', 'D', 'Dmax')
         object@estimates <- estimates
 

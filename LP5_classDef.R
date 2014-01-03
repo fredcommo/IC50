@@ -122,5 +122,5 @@ setMethod("plot", signature = "cellResp",
 )
 
 setMethod('show', signature = 'cellResp',
-          function(object){return(getEstimates(object))}
+          function(object){getEstimates(object)}
 )

@@ -110,22 +110,21 @@ require(stats)
   return(list(lo = lo, hi = hi))
 }
   
-.invModel <- function(Param, Y){
-  if(max(Y)>Param$top | min(Y)<=Param$bottom)
-    return(NA)
-  else
-    return(Param$xmid - 1/Param$scal*log10(((Param$top - Param$bottom)/(Y - Param$bottom))^(1/Param$s)-1))
+.invModel <- function(Param, target){
+  if(any(target>=Param$top))
+    target[target>=Param$top] <- Param$top*.99
+  if(any(target<Param$bottom))
+    target[target<=Param$bottom] <- Param$bottom*1.01
+    return(Param$xmid - 1/Param$scal*log10(((Param$top - Param$bottom)/(target - Param$bottom))^(1/Param$s)-1))
 }
 
 .estimateRange <- function(target, sigma, Param, B = 1e4){
-  Ytarget = Param$bottom + (Param$top - Param$bottom)*target
-  Xtarget = .invModel(Param, Ytarget)
-  if(is.na(Xtarget)) minD <- maxD <- NA
+#  Ytarget = Param$bottom + (Param$top - Param$bottom)*target
+  Xtarget = .invModel(Param, target)
+  if(is.na(Xtarget)) minD <- D <- maxD <- NA
   else{
-    estimate <- lapply(1:B, function(x){
-      Ytmp <- Ytarget + rnorm(1, 0, sigma)
-      .invModel(Param, Ytmp)})
-    estimate <- do.call(c, estimate)
+    Ytmp <- target + rnorm(B, 0, sigma)
+    estimate <- .invModel(Param, Ytmp)
     Q <- quantile(estimate, probs=c(.025, .5, .975), na.rm=T)
     Dmin <- signif(10^Q[1], 2)
     D <- signif(10^Q[2], 2)

@@ -22,7 +22,7 @@ getFilesList <- function(git, tag = ''){
 }
 
 git <- getRepo('fredcommo/IC50')
-Rlist <- getFilesList(git, '[^Demo].R')
+Rlist <- getFilesList(git, '[^Demo].R$')
 sourceRepoFile(git, Rlist)
 op <- par(no.readonly = TRUE)
 ss <- function(i){set.seed(123345+i)}
@@ -40,6 +40,7 @@ dose <- log10(dose)
 test <- IC50(dose, Resp, T0 = .5, Ctrl = max(Resp))
 plot(test)
 getEstimates(test)
+getAUC(test)
 ```
 
 ```
