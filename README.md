@@ -52,7 +52,8 @@ getEstimates(test)
 ```
 
 ```
-# From props of control
+# From props of control. Here you may use Prop = TRUE,
+# or the proportions will be re-estimated from the values (what you do not expect).
 x <- seq(log10(0.001), log10(10), len = 8)
 y <- lapply(1:3, function(i){
   ss(i)
@@ -61,7 +62,7 @@ y <- lapply(1:3, function(i){
 Resp <- do.call(c, y)
 dose <- rep(signif(10^x, 2), 3)
 dose <- log10(dose)
-test <- IC50(dose, Resp)
+test <- IC50(dose, Resp, Prop = TRUE)
 plot(test)
 getEstimates(test)
 ```
